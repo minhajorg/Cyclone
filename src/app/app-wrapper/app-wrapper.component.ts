@@ -36,7 +36,7 @@ export class AppWrapperComponent implements OnInit, AfterViewInit {
       this.ctx.canvas.height = img.height;
       this.ctx.drawImage(img, 0, 0);
     }
-    img.src = '../../assets/mt600.png';
+    img.src = 'assets/mt600.png';
   }
 
   readFile($event): void {
