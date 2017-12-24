@@ -85,7 +85,7 @@ var AppWrapperComponent = (function () {
             _this.ctx.canvas.height = img.height;
             _this.ctx.drawImage(img, 0, 0);
         };
-        img.src = '../../assets/mt600.png';
+        img.src = 'assets/mt600.png';
     };
     AppWrapperComponent.prototype.readFile = function ($event) {
         var _this = this;
