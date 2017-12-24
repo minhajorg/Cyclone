@@ -1,18 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import * as Cropper from 'cropperjs';
 
-/*  - reset on again choosing -- done
-    - settime out while base image is being drawn
-    - preview while cropping
-    - show preview in placeholder
-    - generate canvas of 2
-    - downlaod
-    - get coordinate of placeholder from base image
-    - canvas drag & drop
-    - canvas draw dynamically from image height
-    - check for image types
-*/
-
 @Component({
   selector: 'app-app-wrapper',
   templateUrl: './app-wrapper.component.html',
@@ -26,6 +14,7 @@ export class AppWrapperComponent implements OnInit, AfterViewInit {
   previewImg: any = undefined;
   baseImgWidth = 0;
   baseImgHeight = 0;
+
   @ViewChild('canvas') canvasRef: ElementRef;
   ctx: CanvasRenderingContext2D;
 
