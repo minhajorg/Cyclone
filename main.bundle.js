@@ -148,7 +148,7 @@ var AppWrapperComponent = (function () {
         var _this = this;
         var img = new Image();
         img.onload = function () {
-            _this.ctx.drawImage(img, 212, 280);
+            _this.ctx.drawImage(img, 212, 278);
         };
         img.src = imgSrc;
     };
