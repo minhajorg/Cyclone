@@ -15,27 +15,39 @@
 <div class="container">
   <div class="row">
     <div class="col-md-6">
-        <input type='file' id="uploadBannerImage" (change)="readFile($event)" />
-        <br>
-        <div class="image_preview">
-        </div>
-        <hr/>
-        <div class="live_crop_preview_div"></div>
+      <h4>
+        <i class="fa fa-info-circle"></i>&nbsp;&nbsp;Select a file </h4>
+      <label class="btn btn-outline-primary btn-lg btn-file select-file-btn">
+        <i class="fa fa-upload" aria-hidden="true"></i>&nbsp;&nbsp;Select Your Picture:
+        <input type='file' accept=".png,.jpg,.jpeg,image/png" id="uploadBannerImage" (change)="readFile($event)" style="display: none;"
+        />
+      </label>
+      <span class='label label-info' id="upload-file-info"></span>
+
+      <div class="instructions__step-2-adjustPic" [hidden]="previewImg === undefined">
+        <h4>
+          <i class="fa fa-info-circle"></i>&nbsp;&nbsp;Please adjust your picture</h4>
+        <p>Use your mouse to drag and move the cropping area.
+          <br>You can resize the cropping area using the blue dots on the cornors of cropping box</p>
+      </div>
+      <div class="image_preview"></div>
+      <!--  only uncomment following if preview is enabled. for debugging -->
+      <!-- <div class="live_crop_preview_div"></div> -->
     </div>
+
     <div class="col-md-6">
-      <div>
+      <div class="instructions__step-3-download" *ngIf="isImageLoaded">
+        <h4>
+          <i class="fa fa-info-circle"></i>&nbsp;&nbsp;Download your image</h4>
+        <a class="btn btn-outline-success btn-lg btn-block download__btn" href="#" target="_blank" #downloadLink (click)="downloadCanvas(downloadLink)">
+          <i class="fa fa-download"></i>&nbsp;&nbsp;Download
+        </a>
+      </div>
+      <div class="canvas_holder">
+        <span class="badge badge-info">Live Preview</span>
         <canvas id="canvas" #canvas></canvas>
       </div>
       <br>
-      <hr/>
-      <span (click)="removeAlreadyPresentPreviewImg()">remove</span>
-      <span (click)="cropImage()">crop</span>
-      |
-      <a href="#" target="_blank" #downloadLink (click)="downloadCanvas(downloadLink)">
-          <p>download</p>
-      </a>
-      
-      <hr/>
       <div class="final_cropped_img_div">
         <img src="" alt="" id="cropped_img" />
       </div>

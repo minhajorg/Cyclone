@@ -57,6 +57,7 @@ export class AppWrapperComponent implements OnInit, AfterViewInit {
     };
     console.log($event.target.files[0]);
     reader.readAsDataURL($event.target.files[0]);
+    this.renderer.setProperty(this.elementRef.nativeElement.querySelector('#upload-file-info'), 'innerHTML', $event.target.files[0].name);
   }
 
   enableCropping() {
@@ -64,9 +65,10 @@ export class AppWrapperComponent implements OnInit, AfterViewInit {
     this.cropper = new Cropper(image, {
       aspectRatio: 1,
       scalable: false,
-      preview: '.live_crop_preview_div',
+      // preview: '.live_crop_preview_div',
       ready: (e) => {
         console.log(e.type);
+        this.cropImage();
       },
       cropstart: (e) => {
         console.log(e.type, e.detail.action);
@@ -92,7 +94,9 @@ export class AppWrapperComponent implements OnInit, AfterViewInit {
     const imgSrc = this.cropper.getCroppedCanvas({
       width: 178 // input value
     }).toDataURL();
-    this.renderer.setAttribute(this.elementRef.nativeElement.querySelector('#cropped_img'), 'src', imgSrc);
+
+    /* only for debugging */
+    // this.renderer.setAttribute(this.elementRef.nativeElement.querySelector('#cropped_img'), 'src', imgSrc);
 
     // draw in canvas
     this.drawCroppedImageInCanvas(imgSrc);
@@ -108,9 +112,8 @@ export class AppWrapperComponent implements OnInit, AfterViewInit {
   }
 
   downloadCanvas(link) {
-    console.log('in downlaod');
     console.log(link);
-    const filename = 'naveed.png';
+    const filename = 'cyclone_' + new Date().getTime() + '.png';
     const canvasRef = <HTMLCanvasElement> document.getElementById('canvas');
     link.href = canvasRef.toDataURL();
     link.download = filename;

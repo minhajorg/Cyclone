@@ -9,3 +9,25 @@
     width: 10rem;
     overflow: hidden;
 }
+
+.instructions__step-2-adjustPic {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.instructions__step-3-download {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.select-file-btn {
+    margin-top: 10px;
+}
+
+.canvas_holder {
+    margin-top: 20px;
+}
+
+.download__btn {
+    margin-top: 20px;
+}
