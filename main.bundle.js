@@ -25,7 +25,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, ".image_preview {\n    margin-top: 30px;\n    max-width: 80%;\n    height: 400px;\n}\n\n.live_crop_preview_div {\n    height: 10rem;\n    width: 10rem;\n    overflow: hidden;\n}\n", ""]);
+exports.push([module.i, ".image_preview {\n    margin-top: 30px;\n    max-width: 80%;\n    height: 400px;\n}\n\n.live_crop_preview_div {\n    height: 10rem;\n    width: 10rem;\n    overflow: hidden;\n}\n\n.instructions__step-2-adjustPic {\n    margin-top: 20px;\n    margin-bottom: 10px;\n}\n\n.instructions__step-3-download {\n    margin-top: 20px;\n    margin-bottom: 10px;\n}\n\n.select-file-btn {\n    margin-top: 10px;\n}\n\n.canvas_holder {\n    margin-top: 20px;\n}\n\n.download__btn {\n    margin-top: 20px;\n}\n", ""]);
 
 // exports
 
@@ -38,7 +38,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/app-wrapper/app-wrapper.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"jumbotron bg-success text-white rounded-0\">\n  <div class=\"container\">\n    <div class=\"row\">\n      <div class=\"col-md\">\n        <h1>Cyclone\n          <small class=\"h6\">v1.0.0</small>\n        </h1>\n        <p class=\"lead\">By PAT Social Media Team</p>\n      </div>\n    </div>\n  </div>\n</div>\n<!--  todo: add instructions -->\n<!-- Content -->\n<div class=\"container\">\n  <div class=\"row\">\n    <div class=\"col-md-6\">\n        <input type='file' id=\"uploadBannerImage\" (change)=\"readFile($event)\" />\n        <br>\n        <div class=\"image_preview\">\n        </div>\n        <hr/>\n        <div class=\"live_crop_preview_div\"></div>\n    </div>\n    <div class=\"col-md-6\">\n      <div>\n        <canvas id=\"canvas\" #canvas></canvas>\n      </div>\n      <br>\n      <hr/>\n      <span (click)=\"removeAlreadyPresentPreviewImg()\">remove</span>\n      <span (click)=\"cropImage()\">crop</span>\n      |\n      <a href=\"#\" target=\"_blank\" #downloadLink (click)=\"downloadCanvas(downloadLink)\">\n          <p>download</p>\n      </a>\n      \n      <hr/>\n      <div class=\"final_cropped_img_div\">\n        <img src=\"\" alt=\"\" id=\"cropped_img\" />\n      </div>\n    </div>\n  </div>\n</div>\n"
+module.exports = "<div class=\"jumbotron bg-success text-white rounded-0\">\n  <div class=\"container\">\n    <div class=\"row\">\n      <div class=\"col-md\">\n        <h1>Cyclone\n          <small class=\"h6\">v1.0.0</small>\n        </h1>\n        <p class=\"lead\">By PAT Social Media Team</p>\n      </div>\n    </div>\n  </div>\n</div>\n<!--  todo: add instructions -->\n<!-- Content -->\n<div class=\"container\">\n  <div class=\"row\">\n    <div class=\"col-md-6\">\n      <h4>\n        <i class=\"fa fa-info-circle\"></i>&nbsp;&nbsp;Select a file </h4>\n      <label class=\"btn btn-outline-primary btn-lg btn-file select-file-btn\">\n        <i class=\"fa fa-upload\" aria-hidden=\"true\"></i>&nbsp;&nbsp;Select Your Picture:\n        <input type='file' accept=\".png,.jpg,.jpeg,image/png\" id=\"uploadBannerImage\" (change)=\"readFile($event)\" style=\"display: none;\"\n        />\n      </label>\n      <span class='label label-info' id=\"upload-file-info\"></span>\n\n      <div class=\"instructions__step-2-adjustPic\" [hidden]=\"previewImg === undefined\">\n        <h4>\n          <i class=\"fa fa-info-circle\"></i>&nbsp;&nbsp;Please adjust your picture</h4>\n        <p>Use your mouse to drag and move the cropping area.\n          <br>You can resize the cropping area using the blue dots on the cornors of cropping box</p>\n      </div>\n      <div class=\"image_preview\"></div>\n      <!--  only uncomment following if preview is enabled. for debugging -->\n      <!-- <div class=\"live_crop_preview_div\"></div> -->\n    </div>\n\n    <div class=\"col-md-6\">\n      <div class=\"instructions__step-3-download\" *ngIf=\"isImageLoaded\">\n        <h4>\n          <i class=\"fa fa-info-circle\"></i>&nbsp;&nbsp;Download your image</h4>\n        <a class=\"btn btn-outline-success btn-lg btn-block download__btn\" href=\"#\" target=\"_blank\" #downloadLink (click)=\"downloadCanvas(downloadLink)\">\n          <i class=\"fa fa-download\"></i>&nbsp;&nbsp;Download\n        </a>\n      </div>\n      <div class=\"canvas_holder\">\n        <span class=\"badge badge-info\">Live Preview</span>\n        <canvas id=\"canvas\" #canvas></canvas>\n      </div>\n      <br>\n      <div class=\"final_cropped_img_div\">\n        <img src=\"\" alt=\"\" id=\"cropped_img\" />\n      </div>\n    </div>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -104,6 +104,7 @@ var AppWrapperComponent = (function () {
         };
         console.log($event.target.files[0]);
         reader.readAsDataURL($event.target.files[0]);
+        this.renderer.setProperty(this.elementRef.nativeElement.querySelector('#upload-file-info'), 'innerHTML', $event.target.files[0].name);
     };
     AppWrapperComponent.prototype.enableCropping = function () {
         var _this = this;
@@ -111,9 +112,10 @@ var AppWrapperComponent = (function () {
         this.cropper = new __WEBPACK_IMPORTED_MODULE_1_cropperjs__(image, {
             aspectRatio: 1,
             scalable: false,
-            preview: '.live_crop_preview_div',
+            // preview: '.live_crop_preview_div',
             ready: function (e) {
                 console.log(e.type);
+                _this.cropImage();
             },
             cropstart: function (e) {
                 console.log(e.type, e.detail.action);
@@ -137,7 +139,8 @@ var AppWrapperComponent = (function () {
         var imgSrc = this.cropper.getCroppedCanvas({
             width: 178 // input value
         }).toDataURL();
-        this.renderer.setAttribute(this.elementRef.nativeElement.querySelector('#cropped_img'), 'src', imgSrc);
+        /* only for debugging */
+        // this.renderer.setAttribute(this.elementRef.nativeElement.querySelector('#cropped_img'), 'src', imgSrc);
         // draw in canvas
         this.drawCroppedImageInCanvas(imgSrc);
     };
@@ -150,9 +153,8 @@ var AppWrapperComponent = (function () {
         img.src = imgSrc;
     };
     AppWrapperComponent.prototype.downloadCanvas = function (link) {
-        console.log('in downlaod');
         console.log(link);
-        var filename = 'naveed.png';
+        var filename = 'cyclone_' + new Date().getTime() + '.png';
         var canvasRef = document.getElementById('canvas');
         link.href = canvasRef.toDataURL();
         link.download = filename;

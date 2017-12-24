@@ -49,6 +49,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 // imports
 exports.i(__webpack_require__("../../../../css-loader/index.js?{\"sourceMap\":false,\"importLoaders\":1}!../../../../postcss-loader/lib/index.js?{\"ident\":\"postcss\",\"plugins\":[null,null,null],\"sourceMap\":false}!../../../../cropperjs/dist/cropper.min.css"), "");
 exports.push([module.i, "@import url(https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css);", ""]);
+exports.push([module.i, "@import url(https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css);", ""]);
 
 // module
 exports.push([module.i, "/* You can add global styles to this file, and also import other style files */\n", ""]);
