@@ -20,24 +20,28 @@ export class AppWrapperComponent implements OnInit {
 
   cropper: Cropper;
   isImageLoaded = false;
+  imagePreviewDiv: any;
+  previewImg: any = undefined;
   constructor(private elementRef: ElementRef, private renderer: Renderer2) { }
 
   ngOnInit() {
-
+    this.imagePreviewDiv = this.elementRef.nativeElement.querySelector('.image_preview');
   }
 
   readFile($event): void {
-    const reader = new FileReader();
-    const imagePreviewDiv = this.elementRef.nativeElement.querySelector('.image_preview');
-    const img = this.renderer.createElement('img');
-    this.renderer.setAttribute(img, 'id', 'image');
-    this.renderer.addClass(img, 'imageToPreview');
+    // check if already img rendered, delete that.
+    this.removeAlreadyPresentPreviewImg();
 
+    // create an image for previewing.
+    this.previewImg = this.renderer.createElement('img');
+    this.renderer.setAttribute(this.previewImg, 'id', 'image');
+    this.renderer.addClass(this.previewImg, 'imageToPreview');
+
+    const reader = new FileReader();
     reader.onload = (e: any) => {
       this.isImageLoaded = true;
-      this.renderer.setAttribute(img, 'src', e.target.result);
-      this.renderer.appendChild(imagePreviewDiv, img);
-      // imageToPreview.src = e.target.result;
+      this.renderer.setAttribute(this.previewImg, 'src', e.target.result);
+      this.renderer.appendChild(this.imagePreviewDiv, this.previewImg);
       this.enableCropping();
     };
     console.log($event.target.files[0]);
@@ -50,6 +54,14 @@ export class AppWrapperComponent implements OnInit {
       aspectRatio: 1,
       scalable: false
     });
+  }
+
+  removeAlreadyPresentPreviewImg(): void {
+    if (this.previewImg !== undefined) {
+      console.log('in if');
+      this.renderer.removeChild(this.imagePreviewDiv, this.previewImg);
+      this.renderer.setProperty(this.imagePreviewDiv, 'innerHTML', '');
+    }
   }
 
 }
