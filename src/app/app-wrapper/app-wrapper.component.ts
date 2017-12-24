@@ -1,7 +1,8 @@
-import { Component, ElementRef, OnInit, Renderer2 } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import * as Cropper from 'cropperjs';
 
-/*  - reset on again choosing
+/*  - reset on again choosing -- done
+    - settime out while base image is being drawn
     - preview while cropping
     - show preview in placeholder
     - generate canvas of 2
@@ -9,6 +10,7 @@ import * as Cropper from 'cropperjs';
     - get coordinate of placeholder from base image
     - canvas drag & drop
     - canvas draw dynamically from image height
+    - check for image types
 */
 
 @Component({
@@ -16,16 +18,36 @@ import * as Cropper from 'cropperjs';
   templateUrl: './app-wrapper.component.html',
   styleUrls: ['./app-wrapper.component.css']
 })
-export class AppWrapperComponent implements OnInit {
+export class AppWrapperComponent implements OnInit, AfterViewInit {
 
   cropper: Cropper;
   isImageLoaded = false;
   imagePreviewDiv: any;
   previewImg: any = undefined;
+  baseImgWidth = 0;
+  baseImgHeight = 0;
+  @ViewChild('canvas') canvasRef: ElementRef;
+  ctx: CanvasRenderingContext2D;
+
   constructor(private elementRef: ElementRef, private renderer: Renderer2) { }
 
   ngOnInit() {
     this.imagePreviewDiv = this.elementRef.nativeElement.querySelector('.image_preview');
+  }
+
+  ngAfterViewInit() {
+    this.ctx = this.canvasRef.nativeElement.getContext('2d');
+    this.loadBaseImage();
+  }
+
+  loadBaseImage() {
+    const img = new Image();
+    img.onload = () => {
+      this.ctx.canvas.width = img.width;
+      this.ctx.canvas.height = img.height;
+      this.ctx.drawImage(img, 0, 0);
+    }
+    img.src = '../../assets/mt600.png';
   }
 
   readFile($event): void {

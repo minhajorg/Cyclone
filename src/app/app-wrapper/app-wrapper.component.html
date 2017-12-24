@@ -26,9 +26,11 @@
         </div>
     </div>
     <div class="col-md-6">
-      <div style="width:400px;">
-        <img id="image2" src="../../assets/mt.png" width="400px" />
+      <div>
+        <!-- <img id="image2" src="../../assets/mt.png" width="400px" /> -->
+        <canvas #canvas></canvas>
       </div>
+      <span (click)="removeAlreadyPresentPreviewImg()">remove</span>
     </div>
   </div>
 </div>
