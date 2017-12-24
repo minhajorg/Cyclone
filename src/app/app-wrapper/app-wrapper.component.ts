@@ -106,7 +106,7 @@ export class AppWrapperComponent implements OnInit, AfterViewInit {
   drawCroppedImageInCanvas(imgSrc) {
     const img = new Image();
     img.onload = () => {
-      this.ctx.drawImage(img, 212, 280);
+      this.ctx.drawImage(img, 212, 278);
     }
     img.src = imgSrc;
   }
