@@ -74,16 +74,57 @@ export class AppWrapperComponent implements OnInit, AfterViewInit {
     const image = this.elementRef.nativeElement.querySelector('#image');
     this.cropper = new Cropper(image, {
       aspectRatio: 1,
-      scalable: false
+      scalable: false,
+      preview: '.live_crop_preview_div',
+      ready: (e) => {
+        console.log(e.type);
+      },
+      cropstart: (e) => {
+        console.log(e.type, e.detail.action);
+      },
+      cropmove: (e) => {
+        console.log(e.type, e.detail.action);
+      },
+      cropend: (e) => {
+        console.log(e.type, e.detail.action);
+        this.cropImage();
+      },
     });
   }
 
   removeAlreadyPresentPreviewImg(): void {
     if (this.previewImg !== undefined) {
-      console.log('in if');
       this.renderer.removeChild(this.imagePreviewDiv, this.previewImg);
       this.renderer.setProperty(this.imagePreviewDiv, 'innerHTML', '');
     }
+  }
+
+  cropImage() {
+    const imgSrc = this.cropper.getCroppedCanvas({
+      width: 178 // input value
+    }).toDataURL();
+    this.renderer.setAttribute(this.elementRef.nativeElement.querySelector('#cropped_img'), 'src', imgSrc);
+
+    // draw in canvas
+    this.drawCroppedImageInCanvas(imgSrc);
+
+  }
+
+  drawCroppedImageInCanvas(imgSrc) {
+    const img = new Image();
+    img.onload = () => {
+      this.ctx.drawImage(img, 212, 280);
+    }
+    img.src = imgSrc;
+  }
+
+  downloadCanvas(link) {
+    console.log('in downlaod');
+    console.log(link);
+    const filename = 'naveed.png';
+    const canvasRef = <HTMLCanvasElement> document.getElementById('canvas');
+    link.href = canvasRef.toDataURL();
+    link.download = filename;
   }
 
 }

@@ -22,15 +22,27 @@
         <input type='file' id="uploadBannerImage" (change)="readFile($event)" />
         <br>
         <div class="image_preview">
-            <!-- <img id="image" class="imageToPreview" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" height="100%"/> -->
         </div>
+        <hr/>
+        <div class="live_crop_preview_div"></div>
     </div>
     <div class="col-md-6">
       <div>
-        <!-- <img id="image2" src="../../assets/mt.png" width="400px" /> -->
-        <canvas #canvas></canvas>
+        <canvas id="canvas" #canvas></canvas>
       </div>
+      <br>
+      <hr/>
       <span (click)="removeAlreadyPresentPreviewImg()">remove</span>
+      <span (click)="cropImage()">crop</span>
+      |
+      <a href="#" target="_blank" #downloadLink (click)="downloadCanvas(downloadLink)">
+          <p>download</p>
+      </a>
+      
+      <hr/>
+      <div class="final_cropped_img_div">
+        <img src="" alt="" id="cropped_img" />
+      </div>
     </div>
   </div>
 </div>

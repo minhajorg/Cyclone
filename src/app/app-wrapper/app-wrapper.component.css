@@ -3,3 +3,9 @@
     max-width: 80%;
     height: 400px;
 }
+
+.live_crop_preview_div {
+    height: 10rem;
+    width: 10rem;
+    overflow: hidden;
+}
