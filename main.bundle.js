@@ -38,7 +38,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/app-wrapper/app-wrapper.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"jumbotron bg-success text-white rounded-0\">\n  <div class=\"container\">\n    <div class=\"row\">\n      <div class=\"col-md\">\n        <h1>Cyclone\n          <small class=\"h6\">v1.0.0</small>\n        </h1>\n        <p class=\"lead\">By PAT Social Media Team</p>\n      </div>\n    </div>\n  </div>\n</div>\n<!--  todo: add instructions -->\n<!-- Content -->\n<div class=\"container\">\n  <div class=\"row\">\n    <div class=\"col-md-6\">\n      <h4>\n        <i class=\"fa fa-info-circle\"></i>&nbsp;&nbsp;Select a file </h4>\n      <label class=\"btn btn-outline-primary btn-lg btn-file select-file-btn\">\n        <i class=\"fa fa-upload\" aria-hidden=\"true\"></i>&nbsp;&nbsp;Select Your Picture:\n        <input type='file' accept=\".png,.jpg,.jpeg,image/png\" id=\"uploadBannerImage\" (change)=\"readFile($event)\" style=\"display: none;\"\n        />\n      </label>\n      <span class='label label-info' id=\"upload-file-info\"></span>\n\n      <div class=\"instructions__step-2-adjustPic\" [hidden]=\"previewImg === undefined\">\n        <h4>\n          <i class=\"fa fa-info-circle\"></i>&nbsp;&nbsp;Please adjust your picture</h4>\n        <p>Use your mouse to drag and move the cropping area.\n          <br>You can resize the cropping area using the blue dots on the cornors of cropping box</p>\n      </div>\n      <div class=\"image_preview\"></div>\n      <!--  only uncomment following if preview is enabled. for debugging -->\n      <!-- <div class=\"live_crop_preview_div\"></div> -->\n    </div>\n\n    <div class=\"col-md-6\">\n      <div class=\"instructions__step-3-download\" *ngIf=\"isImageLoaded\">\n        <h4>\n          <i class=\"fa fa-info-circle\"></i>&nbsp;&nbsp;Download your image</h4>\n        <a class=\"btn btn-outline-success btn-lg btn-block download__btn\" href=\"#\" target=\"_blank\" #downloadLink (click)=\"downloadCanvas(downloadLink)\">\n          <i class=\"fa fa-download\"></i>&nbsp;&nbsp;Download\n        </a>\n      </div>\n      <div class=\"canvas_holder\">\n        <span class=\"badge badge-info\">Live Preview</span>\n        <canvas id=\"canvas\" #canvas></canvas>\n      </div>\n      <br>\n      <div class=\"final_cropped_img_div\">\n        <img src=\"\" alt=\"\" id=\"cropped_img\" />\n      </div>\n    </div>\n  </div>\n</div>\n"
+module.exports = "<div class=\"jumbotron bg-success text-white rounded-0\">\n  <div class=\"container\">\n    <div class=\"row\">\n      <div class=\"col-md\">\n        <h1>Cyclone\n          <small class=\"h6\">v1.0.0</small>\n        </h1>\n        <p class=\"lead\">By PAT Social Media Team</p>\n      </div>\n    </div>\n  </div>\n</div>\n<!--  todo: add instructions -->\n<!-- Content -->\n<div class=\"container\">\n  <div class=\"row\">\n    <div class=\"col-md-6\">\n      <h4>\n        <i class=\"fa fa-info-circle\"></i>&nbsp;&nbsp;Select a file </h4>\n      <label class=\"btn btn-outline-primary btn-lg btn-file select-file-btn\">\n        <i class=\"fa fa-upload\" aria-hidden=\"true\"></i>&nbsp;&nbsp;Select Your Picture:\n        <input type='file' accept=\".png,.jpg,.jpeg,image/png,image/jpeg\" id=\"uploadBannerImage\" (change)=\"readFile($event)\" style=\"display: none;\"\n        />\n      </label>\n      <span class='label label-info' id=\"upload-file-info\"></span>\n\n      <div class=\"instructions__step-2-adjustPic\" [hidden]=\"previewImg === undefined\">\n        <h4>\n          <i class=\"fa fa-info-circle\"></i>&nbsp;&nbsp;Please adjust your picture</h4>\n        <p>Use your mouse to drag and move the cropping area.\n          <br>You can resize the cropping area using the blue dots on the cornors of cropping box</p>\n      </div>\n      <div class=\"image_preview\"></div>\n      <!--  only uncomment following if preview is enabled. for debugging -->\n      <!-- <div class=\"live_crop_preview_div\"></div> -->\n    </div>\n\n    <div class=\"col-md-6\">\n      <div class=\"instructions__step-3-download\" *ngIf=\"isImageLoaded\">\n        <h4>\n          <i class=\"fa fa-info-circle\"></i>&nbsp;&nbsp;Download your image</h4>\n        <a class=\"btn btn-outline-success btn-lg btn-block download__btn\" href=\"#\" #downloadLink (click)=\"downloadCanvas(downloadLink)\">\n          <i class=\"fa fa-download\"></i>&nbsp;&nbsp;Download\n        </a>\n      </div>\n      <div class=\"canvas_holder\">\n        <span class=\"badge badge-info\">Live Preview</span>\n        <canvas id=\"canvas\" #canvas></canvas>\n      </div>\n      <br>\n      <div class=\"final_cropped_img_div\">\n        <img src=\"\" alt=\"\" id=\"cropped_img\" />\n      </div>\n    </div>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -156,8 +156,35 @@ var AppWrapperComponent = (function () {
         console.log(link);
         var filename = 'cyclone_' + new Date().getTime() + '.png';
         var canvasRef = document.getElementById('canvas');
-        link.href = canvasRef.toDataURL();
-        link.download = filename;
+        var canvasb64URL = canvasRef.toDataURL().replace(/^data:[a-z]*;,/, '');
+        if (navigator.appVersion.toString().indexOf('.NET') > 0) {
+            var contentType = 'image/png';
+            window.navigator.msSaveBlob(this.b64toBlob(canvasb64URL, contentType), filename);
+        }
+        else {
+            link.href = canvasb64URL;
+            link.download = filename;
+        }
+    };
+    /* hack for IE - https://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript
+     */
+    AppWrapperComponent.prototype.b64toBlob = function (b64Data, contentType, sliceSize) {
+        contentType = contentType || '';
+        sliceSize = sliceSize || 512;
+        b64Data = b64Data.split(',')[1];
+        var byteCharacters = atob(b64Data);
+        var byteArrays = [];
+        for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+            var slice = byteCharacters.slice(offset, offset + sliceSize);
+            var byteNumbers = new Array(slice.length);
+            for (var i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i);
+            }
+            var byteArray = new Uint8Array(byteNumbers);
+            byteArrays.push(byteArray);
+        }
+        var blob = new Blob(byteArrays, { type: contentType });
+        return blob;
     };
     return AppWrapperComponent;
 }());
