@@ -19,7 +19,7 @@
         <i class="fa fa-info-circle"></i>&nbsp;&nbsp;Select a file </h4>
       <label class="btn btn-outline-primary btn-lg btn-file select-file-btn">
         <i class="fa fa-upload" aria-hidden="true"></i>&nbsp;&nbsp;Select Your Picture:
-        <input type='file' accept=".png,.jpg,.jpeg,image/png" id="uploadBannerImage" (change)="readFile($event)" style="display: none;"
+        <input type='file' accept=".png,.jpg,.jpeg,image/png,image/jpeg" id="uploadBannerImage" (change)="readFile($event)" style="display: none;"
         />
       </label>
       <span class='label label-info' id="upload-file-info"></span>
@@ -39,7 +39,7 @@
       <div class="instructions__step-3-download" *ngIf="isImageLoaded">
         <h4>
           <i class="fa fa-info-circle"></i>&nbsp;&nbsp;Download your image</h4>
-        <a class="btn btn-outline-success btn-lg btn-block download__btn" href="#" target="_blank" #downloadLink (click)="downloadCanvas(downloadLink)">
+        <a class="btn btn-outline-success btn-lg btn-block download__btn" href="#" #downloadLink (click)="downloadCanvas(downloadLink)">
           <i class="fa fa-download"></i>&nbsp;&nbsp;Download
         </a>
       </div>
