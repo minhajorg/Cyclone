@@ -72,9 +72,11 @@ export class AppWrapperComponent implements OnInit, AfterViewInit {
       },
       cropstart: (e) => {
         console.log(e.type, e.detail.action);
+        this.cropImage();
       },
       cropmove: (e) => {
         console.log(e.type, e.detail.action);
+        this.cropImage();
       },
       cropend: (e) => {
         console.log(e.type, e.detail.action);
